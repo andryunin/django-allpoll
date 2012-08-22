@@ -1,10 +1,12 @@
 from datetime import date
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.views.generic import ListView
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
+from django.forms import RadioSelect
 
 from allpoll.models import Poll, Choice, Vote
+from allpoll.protection import is_voted, mark_voted
 
 
 class PollListView(ListView):
@@ -18,15 +20,29 @@ poll_list = PollListView.as_view()
 
 def poll_vote(request, poll_id):
     poll = get_object_or_404(Poll, id=poll_id)
+    context = {'poll': poll}
 
     if request.method == 'POST':
-        return HttpResponse('OK')
+        if is_voted(request, poll):
+            return HttpResponseForbidden()
+        try:
+            choice_id = int(request.POST.get('choice_id'))
+        except TypeError, ValueError:
+            raise Http404()
+
+        choice = get_object_or_404(Choice, poll=poll, id=choice_id)
+        choice.vote()
+
+        response = redirect('.')
+        mark_voted(request, response, poll)
+
+        return response
     else:
-        if 'result' in request.GET:
+        if 'result' in request.GET or is_voted(request, poll):
             template = 'allpoll/result.html'
         else:
+            choices = [(i.id, i.answer) for i in poll.get_choices()]
+            context['widget'] = RadioSelect(choices=choices).render(name='choice_id', value=1)
             template = 'allpoll/vote.html'
 
-        return render(request, template, {
-            'poll': poll,
-        })
+        return render(request, template, context)

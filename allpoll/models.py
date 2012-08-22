@@ -33,9 +33,6 @@ class Poll(models.Model):
     def __unicode__(self):
         return self.question
 
-    def is_voted(self, request):
-        return False
-
     def is_active(self):
         today = date.today()
         return (self.start_date <= today) and (today < stop_date)
@@ -44,6 +41,9 @@ class Poll(models.Model):
         if not hasattr(self, '_get_choices_cache'):
             self._get_choices_cache = self.choice_set.select_related().all()
         return self._get_choices_cache
+
+    def get_cookie_name(self):
+        return 'polls_voted_%s' % self.id
 
 
 class Choice(models.Model):
@@ -78,6 +78,9 @@ class Vote(models.Model):
     user = models.ForeignKey(User, null=True)
     ipaddr = models.IPAddressField()
     datetime = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('poll', 'user')
 
     def __unicode__(self):
         return u'%s: %s from %s' % (
