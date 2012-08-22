@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.test.client import Client
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 
 from allpoll.models import Poll, Choice, Vote
 from allpoll import settings
@@ -33,7 +34,7 @@ class VoteTest(TestCase):
 
     def setUp(self):
         self.poll_pk = Poll.objects.order_by('id')[0].pk
-        self.url = reverse('vote', kwargs={'id': self.poll_pk})
+        self.url = reverse('vote', kwargs={'poll_id': self.poll_pk})
         User.objects.create_user(self.USER_NAME, 't@test.test', self.USER_PASS)
 
     def testIPLimit(self):
