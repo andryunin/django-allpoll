@@ -2,8 +2,8 @@
 <html>
   
 <head>
-  <title>AllPoll Default Template</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  
   <style>
     .b-poll-bar-wrap {
       line-height: 15px;
@@ -17,6 +17,23 @@
       background: #999;
     }
   </style>
+
+  <sctipt>
+    {% comment %}
+      I'm including jQuery code in page here because of two reasons:
+
+          1. It is simpler to install app in project (need not care about
+             static files)
+
+          2. Real projects certainly will use their own templates and possibly
+             jQuery, so it can be annoying have with multiple jQuery instances
+             in static files.
+
+    {% endcomment %}
+    {% include "jquery.min.js" %}
+  </script>
+
+  <title>AllPoll Default Template</title>
 </head>
 
 <body>
