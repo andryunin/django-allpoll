@@ -25,6 +25,26 @@ class CounterTest(TestCase):
         self.assertEqual(poll.count, 6)
 
 
+class ClientTest(TestCase):
+    fixtures = ['test_data.json']
+
+    def setUp(self):
+        self.poll_pk = Poll.objects.order_by('id')[0].pk
+        self.vote_url = reverse('allpoll-vote', kwargs={'poll_id': self.poll_pk})
+
+    def testList(self):
+        resp = self.client.get(reverse('allpoll-list'))
+        self.assertEqual(resp.status_code, 200)
+
+    def testVote(self):
+        resp_vote = self.client.get(self.vote_url)
+        resp_result = self.client.get(self.vote_url + '?result')
+
+        self.assertEqual(resp_vote.status_code, 200)
+        self.assertEqual(resp_result.status_code, 200)
+        self.assertNotEqual(resp_vote.content, resp_result.content)
+
+
 class VoteTest(TestCase):
     fixtures = ['test_data.json']
     urls = 'allpoll.urls'
