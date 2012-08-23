@@ -3,14 +3,11 @@
 <h1>Poll List</h1>
 <ul class="b-poll-list">
   {% for poll in poll_list %}
-  <li><p class="b-poll-question">{{ poll.question }}</p>
-      <ul>
-      {% for choice in poll.get_choices %}
-        <li><p>{{ choice.answer }}</p>
-            <div class="b-poll-bar-wrap">
-              <div class="b-poll-bar" style="width: {{ choice.get_percent }}%"></div>{{ choice.get_percent }} %
-            </div>
-      {% endfor %}
+  <li>{% if poll.is_voted %}
+        {% include "allpoll/block_result.html" %}
+      {% else %}
+        {% include "allpoll/block_vote.html" %}
+      {% endif %}
   {% endfor %}
 </ul>
 {% endblock %}

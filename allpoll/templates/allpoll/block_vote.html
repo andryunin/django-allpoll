@@ -1,6 +1,6 @@
 <form action="{% url allpoll-vote poll.id %}" method="POST" class="b-poll-form">
   <p class="b-poll-question">{{ poll.question }}</p>
   {% csrf_token %}
-  {{ widget }}
+  {{ poll.get_widget }}
   <input type="submit" value="Vote" class='.b-poll-submit'>
 </form>

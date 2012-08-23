@@ -4,6 +4,7 @@ from django.db import models
 from django.db.models.query import Q
 from django.db import transaction
 from django.contrib.auth.models import User
+from django.forms import RadioSelect
 
 
 class PollManager(models.Manager):
@@ -44,6 +45,10 @@ class Poll(models.Model):
 
     def get_cookie_name(self):
         return 'polls_voted_%s' % self.id
+
+    def get_widget(self):
+        choices = [(i.id, i.answer) for i in self.get_choices()]
+        return RadioSelect(choices=choices).render(name='choice_id', value="1")
 
 
 class Choice(models.Model):
