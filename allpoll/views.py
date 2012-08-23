@@ -33,10 +33,13 @@ def poll_vote(request, poll_id):
         choice = get_object_or_404(Choice, poll=poll, id=choice_id)
         choice.vote()
 
-        response = redirect('.')
+        if request.is_ajax():
+            response = render(request, 'allpoll/block_result.html', {
+                'poll': poll,
+            })
+        else:
+            response = redirect('.')
         mark_voted(request, response, poll)
-
-        return response
     else:
         if 'result' in request.GET or is_voted(request, poll):
             template = 'allpoll/result.html'
@@ -45,4 +48,6 @@ def poll_vote(request, poll_id):
             context['widget'] = RadioSelect(choices=choices).render(name='choice_id', value=1)
             template = 'allpoll/vote.html'
 
-        return render(request, template, context)
+        response = render(request, template, context)
+
+    return response

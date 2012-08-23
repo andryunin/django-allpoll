@@ -18,9 +18,9 @@
     }
   </style>
 
-  <sctipt>
+  <script>
     {% comment %}
-      I'm including jQuery code in page here because of two reasons:
+      I`m including jQuery code in page here because of two reasons:
 
           1. It is simpler to install app in project (need not care about
              static files)
@@ -30,14 +30,49 @@
              in static files.
 
     {% endcomment %}
-    {% include "jquery.min.js" %}
+    {% include "allpoll/jquery.min.js" %}
+  </script>
+
+  <script>
+    $(document).ready(function() {
+      $('.b-poll-form').each(function() {
+        var form = $(this);
+
+        form.bind('submit', function() {
+          var choice_id = form.find('input[type="radio"]:checked').val();
+          var token = form.find('input[name="csrfmiddlewaretoken"]').val();
+          var data = {
+            csrfmiddlewaretoken: token,
+            choice_id: choice_id
+          };
+
+          $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: data,
+            error: function(data) {
+              alert("Error");
+            },
+
+            success: function(data) {
+              form.replaceWith(data);
+            }
+          });
+
+          return false;
+        });
+      });
+    });
   </script>
 
   <title>AllPoll Default Template</title>
 </head>
 
 <body>
-  {% block content %}{% endblock %}
+  <h1>{% block title %}{% endblock %}</h1>
+  <div>
+    {% block content %}{% endblock %}
+  </div>
 </body>
 
 </html>

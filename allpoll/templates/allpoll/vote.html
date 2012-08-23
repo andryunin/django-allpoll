@@ -1,10 +1,6 @@
 {% extends "allpoll/base.html" %}
+
+{% block title %}Poll Vote{% endblock %}
 {% block content %}
-<h1>Poll Vote</h1>
-<p class="b-poll-question">{{ poll.question }}</p>
-<form action="{% url allpoll-vote poll.id %}" method="POST">
-  {% csrf_token %}
-  {{ widget }}
-  <input type="submit" value="Vote">
-</form>
+  {% include "allpoll/block_vote.html" %}
 {% endblock %}

@@ -1,13 +1,6 @@
 {% extends "allpoll/base.html" %}
+
+{% block title %}Poll Result{% endblock %}
 {% block content %}
-<h1>Poll result</h1>
-<p class="b-poll-question">{{ poll.question }}</p>
-<ul>
-{% for choice in poll.get_choices %}
-  <li><p>{{ choice.answer }}</p>
-      <div class="b-poll-bar-wrap">
-        <div class="b-poll-bar" style="width: {{ choice.get_percent }}%"></div>{{ choice.get_percent }} %
-      </div>
-{% endfor %}
-</ul>
+  {% include "allpoll/block_result.html" %}
 {% endblock %}

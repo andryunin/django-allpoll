@@ -85,6 +85,22 @@ class VoteTest(TestCase):
 
         return True
 
+    def testAjax(self):
+        client = Client()
+        poll, choice, data = self.getData()
+        ip = self.getFreeIP()
+
+        def request():
+            return client.post(self.url, data, REMOTE_ADDR=ip,
+                               HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        self.saveCount()
+
+        self.assertEqual(request().status_code, 200)
+        self.assertEqual(request().status_code, 403)
+
+        self.assertTrue(self.checkCount(1))
+
     def testCookies(self):
         client = Client()
         poll, choice, data = self.getData()
