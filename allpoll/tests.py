@@ -69,15 +69,18 @@ class VoteTest(TestCase):
         self._last_ip += 1
         return '127.0.0.%d' % self._last_ip
 
-    def saveCount(self):
+    def saveCount(self, poll_id, choice_id):
         """Remember current poll and choice counts"""
-        poll, choice, data = self.getData()
-        self._saved_poll_count = poll.count
-        self._saved_choice_count = choice.count
+        self._saved_poll_id = poll_id
+        self._saved_choice_id = choice_id
+        self._saved_poll_count = Poll.objects.get(id=poll_id).count
+        self._saved_choice_count = Choice.objects.get(id=choice_id).count
 
     def checkCount(self, diff):
         """Check diff between saved and current poll and choice counts"""
-        poll, choice, data = self.getData()
+        poll = Poll.objects.get(id=self._saved_poll_id)
+        choice = Choice.objects.get(id=self._saved_choice_id)
+
         if self._saved_poll_count + diff != poll.count:
             return False
         if self._saved_choice_count + diff != choice.count:
@@ -94,11 +97,32 @@ class VoteTest(TestCase):
             return client.post(self.url, data, REMOTE_ADDR=ip,
                                HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
-        self.saveCount()
+        self.saveCount(poll.id, choice.id)
 
         self.assertEqual(request().status_code, 200)
         self.assertEqual(request().status_code, 403)
 
+        self.assertTrue(self.checkCount(1))
+
+    def testAnonymous(self):
+        client = Client()
+        poll = Poll.objects.get(allow_anonymous=False)
+        url = reverse('allpoll-vote', kwargs={'poll_id': poll.id})
+        choice = poll.choice_set.all()[0]
+        data = {'choice_id': choice.id}
+        ip = self.getFreeIP()
+
+        def request():
+            return client.post(url, data, REMOTE_ADDR=ip)
+
+        self.saveCount(poll.id, choice.id)
+        self.assertEqual(request().status_code, 403)
+        self.assertTrue(self.checkCount(0))
+
+        client.login(username=self.USER_NAME, password=self.USER_PASS)
+
+        self.saveCount(poll.id, choice.id)
+        self.assertEqual(request().status_code, 302)
         self.assertTrue(self.checkCount(1))
 
     def testCookies(self):
@@ -109,7 +133,7 @@ class VoteTest(TestCase):
         def request():
             return client.post(self.url, data, REMOTE_ADDR=ip)
 
-        self.saveCount()
+        self.saveCount(poll.id, choice.id)
 
         self.assertEqual(request().status_code, 302)
         self.assertEqual(request().status_code, 403)
@@ -125,7 +149,7 @@ class VoteTest(TestCase):
         def request():
             return client.post(self.url, data, REMOTE_ADDR=ip)
 
-        self.saveCount()
+        self.saveCount(poll.id, choice.id)
 
         self.assertEqual(request().status_code, 302)
         del client.cookies[poll.get_cookie_name()]
@@ -141,7 +165,7 @@ class VoteTest(TestCase):
             client = Client()
             return client.post(self.url, data, REMOTE_ADDR=ip)
 
-        self.saveCount()
+        self.saveCount(poll.id, choice.id)
         
         for i in xrange(settings.IP_LIMIT):
             self.assertEqual(request().status_code, 302)
@@ -158,7 +182,7 @@ class VoteTest(TestCase):
         def request():
             return client.post(self.url, data, REMOTE_ADDR=ip)
 
-        self.saveCount()
+        self.saveCount(poll.id, choice.id)
         
         self.assertEqual(request().status_code, 302)
         self.assertEqual(request().status_code, 403)

@@ -2,6 +2,11 @@ from allpoll.models import Poll, Vote
 from allpoll import settings
 
 
+def can_vote(request, poll):
+    user_can_vote = request.user.is_authenticated() or poll.allow_anonymous
+    return user_can_vote and not is_voted(request, poll)
+
+
 def is_voted(request, poll):
     # First: check logined users
     if hasattr(request, 'user') and request.user.is_authenticated():

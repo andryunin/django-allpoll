@@ -5,7 +5,7 @@ from django.views.generic import ListView
 from django.shortcuts import get_object_or_404, render, redirect
 
 from allpoll.models import Poll, Choice, Vote
-from allpoll.protection import is_voted, mark_voted
+from allpoll.protection import can_vote, mark_voted
 
 
 class PollListView(ListView):
@@ -16,7 +16,7 @@ class PollListView(ListView):
     def get_queryset(self):
         queryset = Poll.objects.public()
         for poll in queryset:
-            poll.is_voted = is_voted(self.request, poll)
+            poll.can_vote = can_vote(self.request, poll)
         return queryset
 
 poll_list = PollListView.as_view()
@@ -27,7 +27,7 @@ def poll_vote(request, poll_id):
     context = {'poll': poll}
 
     if request.method == 'POST':
-        if is_voted(request, poll):
+        if not can_vote(request, poll):
             return HttpResponseForbidden()
         try:
             choice_id = int(request.POST.get('choice_id'))
@@ -43,7 +43,7 @@ def poll_vote(request, poll_id):
             response = redirect('.')
         mark_voted(request, response, poll)
     else:
-        if 'result' in request.GET or is_voted(request, poll):
+        if 'result' in request.GET or not can_vote(request, poll):
             template = 'allpoll/result.html'
         else:
             template = 'allpoll/vote.html'

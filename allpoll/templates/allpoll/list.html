@@ -3,7 +3,7 @@
 <h1>Poll List</h1>
 <ul class="b-poll-list">
   {% for poll in poll_list %}
-  <li>{% if poll.is_voted %}
+  <li>{% if poll.can_vote %}
         {% include "allpoll/block_result.html" %}
       {% else %}
         {% include "allpoll/block_vote.html" %}
