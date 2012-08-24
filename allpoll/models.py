@@ -28,7 +28,7 @@ class Poll(models.Model):
     objects = PollManager()
 
     class Meta:
-        ordering = ('-start_date', '-stop_date')
+        ordering = ('-start_date', '-stop_date', '-id')
         get_latest_by = 'start_date'
 
     def __unicode__(self):

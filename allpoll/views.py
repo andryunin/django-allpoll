@@ -6,12 +6,13 @@ from django.shortcuts import get_object_or_404, render, redirect
 
 from allpoll.models import Poll, Choice, Vote
 from allpoll.protection import can_vote, mark_voted
+from allpoll import settings
 
 
 class PollListView(ListView):
     template_name = 'allpoll/list.html'
     context_object_name = 'poll_list'
-    paginate_by = 20
+    paginate_by = settings.PAGINATE_BY
 
     def get_queryset(self):
         queryset = Poll.objects.public()
