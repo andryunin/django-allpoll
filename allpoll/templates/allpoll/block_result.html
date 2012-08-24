@@ -2,7 +2,7 @@
 {% if poll.is_closed %}<p class="b-poll-info">Poll closed at {{ poll.stop_date|date:"d E Y" }}{% endif %}
 <ul>
 {% for choice in poll.get_choices %}
-  <li><p>{{ choice.answer }}</p>
+  <li><div class="b-poll-answer">{{ choice.answer }}</div>
       <div class="b-poll-bar-wrap">
         <div class="b-poll-bar" style="width: {{ choice.get_percent }}%"></div>{{ choice.get_percent }} %
       </div>

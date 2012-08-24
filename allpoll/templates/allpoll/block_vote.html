@@ -2,5 +2,7 @@
   <p class="b-poll-question">{{ poll.question }}</p>
   {% csrf_token %}
   {{ poll.get_widget }}
-  <input type="submit" value="Vote" class='.b-poll-submit'>
+  <div class="b-poll-submit">
+    <input type="submit" value="Vote">
+  </div>
 </form>
