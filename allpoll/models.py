@@ -35,8 +35,17 @@ class Poll(models.Model):
         return self.question
 
     def is_active(self):
-        today = date.today()
-        return (self.start_date <= today) and (today < stop_date)
+        return self.is_opened and not self.is_closed()
+
+    def is_opened(self):
+        if self.start_date != None:
+            return self.start_date <= date.today()
+        return True
+
+    def is_closed(self):
+        if self.stop_date != None:
+            return self.stop_date <= date.today()
+        return False
 
     def get_choices(self):
         if not hasattr(self, '_get_choices_cache'):

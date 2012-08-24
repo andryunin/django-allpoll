@@ -24,7 +24,7 @@ poll_list = PollListView.as_view()
 
 
 def poll_vote(request, poll_id):
-    poll = get_object_or_404(Poll, id=poll_id)
+    poll = get_object_or_404(Poll.objects.public(), id=poll_id)
     context = {'poll': poll}
 
     if request.method == 'POST':

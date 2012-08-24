@@ -1,4 +1,5 @@
 <p class="b-poll-question">{{ poll.question }}</p>
+{% if poll.is_closed %}<p class="b-poll-info">Poll closed at {{ poll.stop_date|date:"d E Y" }}{% endif %}
 <ul>
 {% for choice in poll.get_choices %}
   <li><p>{{ choice.answer }}</p>
