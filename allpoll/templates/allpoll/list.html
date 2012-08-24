@@ -4,9 +4,9 @@
 <ul class="b-poll-list">
   {% for poll in poll_list %}
   <li>{% if poll.can_vote %}
-        {% include "allpoll/block_result.html" %}
+        {% include "allpoll/block_vote.html" %}        
       {% else %}
-        {% include "allpoll/block_vote.html" %}
+        {% include "allpoll/block_result.html" %}
       {% endif %}
   {% endfor %}
 </ul>
