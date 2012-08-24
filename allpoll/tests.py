@@ -32,11 +32,11 @@ class ClientTest(TestCase):
         self.poll_pk = Poll.objects.order_by('id')[0].pk
         self.vote_url = reverse('allpoll-vote', kwargs={'poll_id': self.poll_pk})
 
-    def testList(self):
+    def testListPage(self):
         resp = self.client.get(reverse('allpoll-list'))
         self.assertEqual(resp.status_code, 200)
 
-    def testVote(self):
+    def testVotePage(self):
         resp_vote = self.client.get(self.vote_url)
         resp_result = self.client.get(self.vote_url + '?result')
 

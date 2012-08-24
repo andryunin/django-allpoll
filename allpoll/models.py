@@ -23,7 +23,7 @@ class Poll(models.Model):
     start_date = models.DateField(null=True)
     stop_date = models.DateField(null=True)
     allow_anonymous = models.BooleanField(default=True)
-    count = models.PositiveIntegerField(default=0)
+    count = models.PositiveIntegerField(default=0, editable=False)
 
     objects = PollManager()
 
@@ -64,7 +64,7 @@ class Choice(models.Model):
     poll = models.ForeignKey(Poll)
     answer = models.CharField(max_length=255)
     order = models.PositiveIntegerField(default=0)
-    count = models.PositiveIntegerField(default=0)
+    count = models.PositiveIntegerField(default=0, editable=False)
 
     class Meta:
         ordering = ('order', 'pk')
