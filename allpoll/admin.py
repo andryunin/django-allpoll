@@ -4,7 +4,6 @@ from allpoll.models import Poll, Choice, Vote
 
 class ChoiceInlineModelAdmin(admin.TabularInline):
     model = Choice
-    exclude = ('count',)
 
 
 class PollAdmin(admin.ModelAdmin):
