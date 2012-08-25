@@ -58,7 +58,9 @@ class AllPollRenderNode(AllPollNode):
             tpl = template.loader.get_template('allpoll/block_vote.html')
         else:
             tpl = template.loader.get_template('allpoll/block_result.html')
-        return tpl.render(template.Context({'poll': poll}))
+        request = context['request']
+        
+        return tpl.render(template.RequestContext(request, {'poll': poll}))
 
 
 @register.tag(name='allpoll_get')
