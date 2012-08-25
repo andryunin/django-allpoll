@@ -2,7 +2,7 @@
 AllPoll
 =======
 
-AllPoll is simple polling appication for Django.
+AllPoll is simple polling appication for Django. Includes single and list views, ajax support.
 
 Install
 -------
@@ -31,9 +31,13 @@ Install
 4. finally:
 
         python manage.py syncdb
-        python manage.py collectstatic
 
 Usage
 -----
 
-You can use {% allpoll_latest %} template tag to include latest poll in template.
+You can use predefined AllPoll views and/or template tags:
+
+* `allpoll_get`: get poll as context variable
+* `allpoll_render`: include and render poll template
+
+**NOTE**: `allpoll.views.poll_vote` view is required for voting
