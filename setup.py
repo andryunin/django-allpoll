@@ -1,6 +1,6 @@
 from distutils.core import setup
 
-setup(name='django-polls',
+setup(name='django-allpoll',
       version='0.9',
       description='Simple polling application for Django',
       author='Maxim Andryunin',
