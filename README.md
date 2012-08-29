@@ -11,7 +11,7 @@ Install
     
         python setup.py install
 
-2. add django-polls to your INSTALLED_APPS:
+2. add django-allpoll to your INSTALLED_APPS:
 
         INSTALLED_APPS = (...
             ...
