@@ -2,6 +2,9 @@
 AllPoll
 =======
 
+> **:warning: WARNING:** this project was abandoned many years ago. Please do not use it.
+
+
 AllPoll is simple polling appication for Django. Includes single and list views, ajax support.
 
 Install
